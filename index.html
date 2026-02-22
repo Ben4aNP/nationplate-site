@@ -3,126 +3,628 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benjamin's Gaming Blog</title>
-    <style>
-        /* --- General Page Styles --- */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
+    <title>NationPlate | The Nation at Your Table</title>
+    
+    <!-- Fonts: Playfair Display (Headings) and Lato (Body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        /* --- Navigation Bar (Based on Figure 11.14 logic) --- */
-        nav {
-            background-color: #333; /* Dark background */
-            padding: 1rem;
-        }
-
-        nav ul {
-            list-style-type: none; /* Removes bullet points */
-            margin: 0;
-            padding: 0;
-            text-align: center; /* Centers the links */
-        }
-
-        nav li {
-            display: inline; /* Makes the list horizontal */
-            margin: 0 15px;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none; /* Removes underline */
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        nav a:hover {
-            color: #ff9900; /* Changes color when you hover */
-        }
-
-        /* --- Header --- */
-        header {
-            text-align: center;
-            padding: 20px;
-            background-color: #fff;
-            border-bottom: 2px solid #ddd;
-        }
-
-        /* --- The 3-Column Layout (Using Flexbox) --- */
-        .container {
-            display: flex; /* This turns on Flexbox */
-            justify-content: space-between; /* Spacing between columns */
-            max-width: 1200px;
-            margin: 20px auto; /* Centers the container */
-            padding: 0 20px;
-            gap: 20px; /* Space between the columns */
-        }
-
-        .column {
-            background-color: white;
-            padding: 20px;
-            flex: 1; /* Makes all 3 columns equal width */
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        /* --- Images --- */
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-
-        /* --- Responsive Design (Optional but good for points) --- */
-        /* If screen is small, stack the columns */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
+    <!-- Application Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'culinary-cream': '#FDFBF7',
+                        'chef-black': '#1C1917',
+                        'saffron': '#D97706',
+                        'sage': '#57534E',
+                        'terracotta': '#9A3412',
+                        'plate-gray': '#E5E5E5'
+                    },
+                    fontFamily: {
+                        sans: ['Lato', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
             }
+        }
+    </script>
+
+    <style>
+        /* CRITICAL: Chart Container Styling for Responsiveness */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        /* Mobile adjustment */
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 280px;
+            }
+        }
+
+        /* Custom Scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D6D3D1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #A8A29E; 
+        }
+
+        /* Smooth section transitions */
+        .fade-in {
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .nav-link.active {
+            border-bottom: 2px solid #9A3412;
+            color: #9A3412;
+            font-weight: 700;
         }
     </style>
 </head>
-<body>
+<body class="bg-culinary-cream text-chef-black font-sans antialiased selection:bg-saffron selection:text-white">
 
-    <nav>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Reviews</a></li>
-            <li><a href="#">Walkthroughs</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
+    <!-- REQUIRED PLACEHOLDERS -->
+    <!-- Chosen Palette: Warm Culinary Neutrals (Cream, Charcoal) with Saffron and Terracotta Accents. -->
+    
+    <!-- Application Structure Plan: 
+         1. Hero Section: Immediate brand immersion, clearly stating Pre-Alpha status and the new 15-20 min heat-and-eat value prop.
+         2. The Menu (Interactive): A split-screen view allowing users to select regional national recipes. Prep times updated to reflect heat-and-eat.
+         3. The Impact (Metrics): Visualizing the mission (regional sourcing, heritage, tailored effortless cooking).
+         4. Culinary Citizens (Community): A waitlist section visualizing expected demographics and building exclusivity.
+    -->
+
+    <!-- Visualization & Content Choices:
+         1. Flavor Profile Radar Chart: Goal -> Visualize taste. Method -> Chart.js Radar. Interaction -> Updates on recipe click. 
+         2. Waitlist Interest Doughnut: Goal -> Show national interest in the pre-alpha. Method -> Chart.js Doughnut.
+         Confirming NO SVG graphics used. NO Mermaid JS used.
+    -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-culinary-cream/95 backdrop-blur-sm shadow-sm z-50 border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="scrollToSection('hero')">
+                    <!-- Text-based Logo to avoid SVG -->
+                    <span class="font-serif text-3xl font-bold tracking-tight text-terracotta">Nation<span class="text-chef-black">Plate</span></span>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <button onclick="scrollToSection('mission')" class="nav-link text-stone-600 hover:text-terracotta transition-colors px-3 py-2 text-sm uppercase tracking-widest">Our Mission</button>
+                    <button onclick="scrollToSection('menu')" class="nav-link text-stone-600 hover:text-terracotta transition-colors px-3 py-2 text-sm uppercase tracking-widest">The Menu</button>
+                    <button onclick="scrollToSection('community')" class="nav-link text-stone-600 hover:text-terracotta transition-colors px-3 py-2 text-sm uppercase tracking-widest">Founding Citizens</button>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-stone-600 font-bold" onclick="alert('Please view on a larger screen for the full Chef\'s Table experience.')">MENU</button>
+                </div>
+            </div>
+        </div>
     </nav>
 
-    <header>
-        <h1>Benjamin's Gaming Corner</h1>
-        <p>Exploring the worlds of Elden Ring, Zelda, and more.</p>
-    </header>
+    <!-- Main Content Container -->
+    <main class="pt-20">
 
-    <div class="container">
-        
-        <div class="column">
-            <h2>Latest Review</h2>
-            <img src="game1.jpg" alt="Elden Ring Screenshot">
-            <p>Elden Ring continues to dominate the charts. The open-world design sets a new standard for the genre.</p>
-        </div>
+        <!-- HERO SECTION -->
+        <section id="hero" class="min-h-[80vh] flex items-center justify-center relative overflow-hidden">
+            <div class="max-w-5xl mx-auto px-6 text-center z-10 fade-in">
+                <div class="mb-6 inline-block">
+                    <span class="bg-chef-black text-white px-4 py-1 rounded-full text-xs font-bold tracking-[0.2em]">PRE-ALPHA ACCESS</span>
+                </div>
+                <h1 class="font-serif text-5xl md:text-7xl font-bold text-chef-black leading-tight mb-8">
+                    The Nation's Harvest,<br>Ready in Minutes.
+                </h1>
+                <p class="text-xl md:text-2xl text-stone-600 max-w-3xl mx-auto leading-relaxed font-light mb-12">
+                    NationPlate is currently in the test kitchen. We are curating authentic, chef-prepared regional meals that go from box to table in under 20 minutes, with smart instructions tailored exactly to how you cook.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-6">
+                    <button onclick="scrollToSection('menu')" class="bg-terracotta text-white px-8 py-4 rounded-sm font-bold shadow-lg hover:bg-orange-800 transition-all hover:shadow-xl uppercase tracking-widest text-sm">
+                        Preview the Menu
+                    </button>
+                    <button onclick="scrollToSection('community')" class="bg-transparent border-2 border-chef-black text-chef-black px-8 py-4 rounded-sm font-bold hover:bg-chef-black hover:text-white transition-all uppercase tracking-widest text-sm">
+                        Join the Waitlist
+                    </button>
+                </div>
+            </div>
+            <!-- Decorative Background Element (CSS Only) -->
+            <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-stone-100 rounded-full opacity-50 z-0"></div>
+            <div class="absolute top-20 left-10 w-64 h-64 bg-stone-100 rounded-full opacity-50 z-0"></div>
+        </section>
 
-        <div class="column">
-            <h2>Cooking Tips</h2>
-            <p><strong>Gamer Fuel:</strong> Quick recipes for long gaming sessions.</p>
-            <p>When I'm not playing, I'm cooking. Check out my recipe for the ultimate spicy ramen that keeps you alert during boss fights.</p>
-        </div>
+        <!-- MISSION BREAKDOWN (The "Why") -->
+        <section id="mission" class="py-24 bg-white border-t border-stone-100">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="font-serif text-4xl font-bold text-chef-black mb-4">Our Core Philosophy</h2>
+                    <p class="text-stone-500 max-w-2xl mx-auto">We do the 15-hour smokes and all-day simmers so you don't have to. Here is how we define our culinary footprint as we prepare to launch.</p>
+                </div>
 
-        <div class="column">
-            <h2>Upcoming Games</h2>
-            <p>We are all waiting for the DLC. Here is what we know so far about the release dates and new map areas coming soon.</p>
-            <p><em>Stay tuned for updates!</em></p>
-        </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+                    <!-- Pillar 1 -->
+                    <div class="p-8 hover:bg-stone-50 transition-colors duration-300 rounded-xl cursor-default group">
+                        <div class="text-5xl mb-6 grayscale group-hover:grayscale-0 transition-all">🗺️</div>
+                        <h3 class="font-serif text-2xl font-bold mb-3 group-hover:text-terracotta transition-colors">Regional Sourcing</h3>
+                        <p class="text-stone-600 leading-relaxed">Ingredients sourced directly from their defining regions. Hatch Chiles from New Mexico, Wild Salmon from Alaska, Maple from Vermont.</p>
+                    </div>
+                    <!-- Pillar 2 -->
+                    <div class="p-8 hover:bg-stone-50 transition-colors duration-300 rounded-xl cursor-default group">
+                        <div class="text-5xl mb-6 grayscale group-hover:grayscale-0 transition-all">📜</div>
+                        <h3 class="font-serif text-2xl font-bold mb-3 group-hover:text-terracotta transition-colors">Heritage Respect</h3>
+                        <p class="text-stone-600 leading-relaxed">Recipes developed in partnership with local chefs and regional historians, ensuring every dish honors its true American lineage.</p>
+                    </div>
+                    <!-- Pillar 3 -->
+                    <div class="p-8 hover:bg-stone-50 transition-colors duration-300 rounded-xl cursor-default group">
+                        <div class="text-5xl mb-6 grayscale group-hover:grayscale-0 transition-all">⏱️</div>
+                        <h3 class="font-serif text-2xl font-bold mb-3 group-hover:text-terracotta transition-colors">Tailored & Effortless</h3>
+                        <p class="text-stone-600 leading-relaxed">Chef-prepared components mean meals are ready in 20 minutes max. Our smart instructions adapt perfectly to your kitchen equipment and preferences.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    </div>
+        <!-- THE MENU (Interactive Visualization) -->
+        <section id="menu" class="py-24 bg-stone-50">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    
+                    <!-- Left: Intro & List -->
+                    <div class="lg:col-span-4">
+                        <h2 class="font-serif text-4xl font-bold text-chef-black mb-6">Test Kitchen Previews</h2>
+                        <p class="text-stone-600 mb-8">
+                            Get a sneak peek at the heat-and-eat recipes we are currently perfecting for launch. Select a dish to view our flavor profile targets. 
+                            <br><br>
+                            <span class="text-xs font-bold tracking-widest uppercase text-terracotta">Upcoming Season: "Coast to Coast Classics"</span>
+                        </p>
 
+                        <!-- Recipe List -->
+                        <div class="space-y-4" id="recipe-list">
+                            <!-- JS will populate buttons here -->
+                        </div>
+                    </div>
+
+                    <!-- Middle: Details Card -->
+                    <div class="lg:col-span-4 bg-white p-8 rounded-lg shadow-xl border-t-4 border-terracotta min-h-[400px] flex flex-col justify-between transition-all duration-300" id="recipe-card">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="font-serif text-3xl font-bold text-chef-black" id="recipe-title">Loading...</h3>
+                                <span class="text-2xl" id="recipe-icon">🍽️</span>
+                            </div>
+                            <div class="flex items-center space-x-2 mb-4">
+                                <span class="text-xs font-bold text-stone-400 uppercase tracking-widest" id="recipe-origin">Origin</span>
+                                <span class="text-stone-300">•</span>
+                                <span class="text-xs font-bold text-saffron uppercase tracking-widest flex items-center"><span class="mr-1">⚡</span> Heat & Eat</span>
+                            </div>
+                            <p class="text-stone-600 italic mb-6 leading-relaxed" id="recipe-desc">Select a recipe to view details.</p>
+                            
+                            <div class="bg-stone-50 p-4 rounded mb-6">
+                                <h4 class="text-xs font-bold uppercase mb-2 text-stone-800">Target Ingredients</h4>
+                                <p class="text-sm text-stone-600 font-mono" id="recipe-ingredients">-</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col space-y-4 mt-4 border-t border-stone-100 pt-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="block text-xs text-stone-400 uppercase">Your Prep Time</span>
+                                    <span class="font-bold text-chef-black" id="recipe-time">-- min</span>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-stone-400 uppercase">Effort</span>
+                                    <span class="font-bold text-chef-black" id="recipe-diff">--</span>
+                                </div>
+                                <button class="bg-chef-black text-white px-4 py-2 text-xs uppercase font-bold tracking-widest hover:bg-terracotta transition-colors opacity-50 cursor-not-allowed" title="Available at Launch">
+                                    View Instructions
+                                </button>
+                            </div>
+                            <div class="bg-orange-50 text-terracotta text-xs p-3 rounded border border-orange-100 flex items-start">
+                                <span class="mr-2 text-lg leading-none">📱</span>
+                                <span><strong>Tailored Instructions:</strong> Adapts to your preferred cooking method (Oven, Stovetop, Microwave, or Air Fryer) upon delivery.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Flavor Radar Chart -->
+                    <div class="lg:col-span-4 flex flex-col justify-center">
+                        <div class="mb-4 text-center">
+                            <h3 class="font-serif text-xl font-bold">Target Flavor Profile</h3>
+                            <p class="text-xs text-stone-500 uppercase tracking-widest">Alpha Sensory Data</p>
+                        </div>
+                        
+                        <div class="chart-container bg-white rounded-full p-4 shadow-inner border border-stone-100">
+                            <canvas id="flavorRadar"></canvas>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <p class="text-sm text-stone-500 italic" id="flavor-note">
+                                "Tuning the balance..."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CULINARY CITIZENS (Waitlist) -->
+        <section id="community" class="py-24 bg-chef-black text-culinary-cream relative">
+            <div class="max-w-7xl mx-auto px-6">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    
+                    <!-- Text Content -->
+                    <div>
+                        <div class="mb-2">
+                            <span class="text-saffron font-bold tracking-widest uppercase text-xs">Pre-Alpha Registration</span>
+                        </div>
+                        <h2 class="font-serif text-4xl md:text-5xl font-bold mb-6 text-white">Become a <br><span class="text-stone-400 italic">Founding Citizen.</span></h2>
+                        <p class="text-stone-300 text-lg leading-relaxed mb-8">
+                            We are building something special, and we want you at the table from day one. 
+                            When you join the NationPlate waitlist, you secure your spot in the <strong>Citizens' Guild</strong>—an exclusive group of founding diners who will help shape our tailored cooking algorithms and first official menu.
+                        </p>
+                        
+                        <ul class="space-y-4 mb-10">
+                            <li class="flex items-center space-x-3">
+                                <span class="text-saffron">✦</span>
+                                <span class="text-stone-200">First Access to Heat-and-Eat Beta Deliveries</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <span class="text-saffron">✦</span>
+                                <span class="text-stone-200">"Founding Citizen" Lifetime Account Badge</span>
+                            </li>
+                            <li class="flex items-center space-x-3">
+                                <span class="text-saffron">✦</span>
+                                <span class="text-stone-200">Early Input on Dietary Customization Features</span>
+                            </li>
+                        </ul>
+
+                        <div class="flex max-w-md">
+                            <input type="email" placeholder="Enter your email" class="bg-stone-800 text-white border border-stone-700 px-4 py-3 w-full focus:outline-none focus:border-saffron rounded-l-sm">
+                            <button onclick="alert('Thank you! You have been added to the Founding Citizens waitlist.')" class="bg-saffron text-chef-black px-6 py-3 font-bold uppercase tracking-widest text-sm hover:bg-white transition-colors rounded-r-sm whitespace-nowrap">
+                                Join Waitlist
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Data Viz: Community Stats -->
+                    <div class="bg-stone-900/50 p-8 rounded-xl border border-stone-800">
+                        <div class="mb-6 flex justify-between items-end">
+                            <h3 class="font-serif text-2xl text-white">Waitlist Distribution</h3>
+                            <span class="text-xs text-stone-500 uppercase">Pre-Alpha Interest</span>
+                        </div>
+                        
+                        <div class="chart-container" style="height: 300px;">
+                            <canvas id="communityDoughnut"></canvas>
+                        </div>
+                        
+                        <div class="mt-8 grid grid-cols-3 gap-4 text-center border-t border-stone-800 pt-6">
+                            <div>
+                                <span class="block text-2xl font-bold text-white">0</span>
+                                <span class="text-xs text-stone-500 uppercase">Meals Shipped</span>
+                            </div>
+                            <div>
+                                <span class="block text-2xl font-bold text-white">5</span>
+                                <span class="text-xs text-stone-500 uppercase">Regions in Test</span>
+                            </div>
+                            <div>
+                                <span class="block text-2xl font-bold text-saffron">TBA</span>
+                                <span class="text-xs text-stone-500 uppercase">Launch Date</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-stone-100 py-12 border-t border-stone-200">
+            <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <span class="font-serif text-2xl font-bold text-terracotta">Nation<span class="text-chef-black">Plate</span></span>
+                    <p class="text-xs text-stone-500 mt-2">© 2026 NationPlate Culinary Group. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-6 text-sm text-stone-600 font-bold uppercase tracking-widest">
+                    <a href="#" class="hover:text-terracotta">Instagram</a>
+                    <a href="#" class="hover:text-terracotta">Twitter</a>
+                    <a href="#" class="hover:text-terracotta">Press Inquiries</a>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- LOGIC -->
+    <script>
+        // --- DATA STORE ---
+        // Updated for heat-and-eat (max 20 mins) and tailored approach
+        const recipes = [
+            {
+                id: 1,
+                title: "Central Texas Smoked Brisket",
+                origin: "Austin, Texas",
+                icon: "🥩",
+                desc: "We smoke this brisket for 15 hours over authentic post oak. It arrives fully prepared—you simply heat it in the oven or sous-vide bag for a melt-in-your-mouth Texas bark in minutes.",
+                ingredients: "15hr Smoked Prime Beef Brisket, Texas BBQ Glaze, Scalloped Potatoes",
+                time: "15", 
+                difficulty: "Effortless",
+                flavorProfile: [1, 4, 1, 2, 5, 2], // Sweet, Salty, Sour, Bitter, Umami, Spice
+                note: "Target: Deeply savory, smoky, with a prominent peppery bark."
+            },
+            {
+                id: 2,
+                title: "Louisiana Seafood Gumbo",
+                origin: "New Orleans, Louisiana",
+                icon: "🍲",
+                desc: "Our dark roux simmers all day so you don't have to. This rich Creole classic arrives ready to bring to a quick simmer on your stovetop or microwave.",
+                ingredients: "Slow-simmered Gumbo Base, Gulf Shrimp, Andouille Sausage, Pre-cooked Jasmine Rice",
+                time: "15",
+                difficulty: "Effortless",
+                flavorProfile: [1, 4, 2, 3, 5, 4],
+                note: "Target: Rich, complex earthiness with a slow-building heat."
+            },
+            {
+                id: 3,
+                title: "New England Clam Chowder",
+                origin: "Boston, Massachusetts",
+                icon: "🥣",
+                desc: "Slow-cooked coastal perfection. We've balanced the fresh littleneck clams and heavy cream perfectly. Heats up beautifully on the stove in minutes.",
+                ingredients: "Littleneck Clams, Potatoes, Cream Base, Salt Pork, Oyster Crackers",
+                time: "12",
+                difficulty: "Effortless",
+                flavorProfile: [2, 4, 1, 1, 5, 1],
+                note: "Target: Briny, creamy, deeply comforting and rich."
+            },
+            {
+                id: 4,
+                title: "Lowcountry Shrimp & Grits",
+                origin: "Charleston, South Carolina",
+                icon: "🍤",
+                desc: "Heritage stone-ground grits, pre-cooked to creamy perfection. Just sear the shrimp, warm the bacon gravy, and combine. Instructions adapt to stovetop or air-fryer.",
+                ingredients: "Creamy Stone-ground Grits, White Shrimp, Bacon Pan Gravy, Scallions",
+                time: "20",
+                difficulty: "Effortless",
+                flavorProfile: [2, 4, 2, 1, 5, 2],
+                note: "Target: Creamy base cut by savory, bright, and salty toppings."
+            },
+            {
+                id: 5,
+                title: "PNW Cedar Plank Salmon",
+                origin: "Seattle, Washington",
+                icon: "🐟",
+                desc: "Pre-glazed and resting on its cedar plank. Whether you choose to finish it in the oven, air fryer, or on the grill, our tailored instructions guarantee a perfect flake.",
+                ingredients: "Wild Sockeye Salmon on Cedar, Maple-Mustard Glaze, Roasted Asparagus",
+                time: "15",
+                difficulty: "Effortless",
+                flavorProfile: [4, 3, 2, 2, 4, 1],
+                note: "Target: Delicate woodsy smoke paired with sweet and tangy glaze."
+            }
+        ];
+
+        // --- STATE ---
+        let currentRecipeIndex = 0;
+        let flavorChartInstance = null;
+        let communityChartInstance = null;
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initRecipeList();
+            renderRecipe(0);
+            initCommunityChart();
+        });
+
+        // --- FUNCTIONS ---
+
+        function scrollToSection(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function initRecipeList() {
+            const listContainer = document.getElementById('recipe-list');
+            listContainer.innerHTML = '';
+
+            recipes.forEach((recipe, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-lg border border-stone-200 hover:border-terracotta hover:bg-white transition-all duration-200 flex items-center justify-between group ${index === currentRecipeIndex ? 'border-terracotta bg-white shadow-md' : 'bg-transparent'}`;
+                btn.innerHTML = `
+                    <div class="flex items-center">
+                        <span class="text-2xl mr-4 opacity-80">${recipe.icon}</span>
+                        <div>
+                            <span class="block font-bold text-stone-800 group-hover:text-terracotta transition-colors">${recipe.title}</span>
+                            <span class="text-xs text-stone-500 uppercase tracking-wider">${recipe.origin}</span>
+                        </div>
+                    </div>
+                    <span class="text-stone-300 group-hover:text-terracotta">→</span>
+                `;
+                btn.onclick = () => renderRecipe(index);
+                listContainer.appendChild(btn);
+            });
+        }
+
+        function renderRecipe(index) {
+            currentRecipeIndex = index;
+            const recipe = recipes[index];
+
+            // Update UI Text
+            document.getElementById('recipe-title').innerText = recipe.title;
+            document.getElementById('recipe-icon').innerText = recipe.icon;
+            document.getElementById('recipe-origin').innerText = recipe.origin;
+            document.getElementById('recipe-desc').innerText = recipe.desc;
+            document.getElementById('recipe-ingredients').innerText = recipe.ingredients;
+            document.getElementById('recipe-time').innerText = recipe.time + " min";
+            document.getElementById('recipe-diff').innerText = recipe.difficulty;
+            document.getElementById('flavor-note').innerText = `"${recipe.note}"`;
+
+            // Re-render List styling
+            const listContainer = document.getElementById('recipe-list');
+            Array.from(listContainer.children).forEach((child, idx) => {
+                if (idx === index) {
+                    child.classList.add('border-terracotta', 'bg-white', 'shadow-md');
+                    child.classList.remove('bg-transparent');
+                } else {
+                    child.classList.remove('border-terracotta', 'bg-white', 'shadow-md');
+                    child.classList.add('bg-transparent');
+                }
+            });
+
+            // Update Chart
+            updateFlavorChart(recipe);
+        }
+
+        function updateFlavorChart(recipe) {
+            const ctx = document.getElementById('flavorRadar').getContext('2d');
+            
+            if (flavorChartInstance) {
+                flavorChartInstance.destroy();
+            }
+
+            // Radar Chart Config
+            flavorChartInstance = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Sweet', 'Salty', 'Sour', 'Bitter', 'Umami', 'Spice'],
+                    datasets: [{
+                        label: 'Target Profile',
+                        data: recipe.flavorProfile,
+                        backgroundColor: 'rgba(154, 52, 18, 0.2)', // Terracotta transparent
+                        borderColor: 'rgba(154, 52, 18, 1)',
+                        pointBackgroundColor: 'rgba(217, 119, 6, 1)', // Saffron
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(154, 52, 18, 1)',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    family: 'Lato',
+                                    size: 11,
+                                    weight: 'bold'
+                                },
+                                color: '#57534E'
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5,
+                            ticks: {
+                                display: false, // Hide numbers for cleaner look
+                                maxTicksLimit: 5
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1C1917',
+                            titleFont: { family: 'Playfair Display' },
+                            bodyFont: { family: 'Lato' },
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    const labels = ["Low", "Mild", "Balanced", "Noticeable", "High", "Intense"];
+                                    return context.label + ': ' + labels[context.raw];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function initCommunityChart() {
+            const ctx = document.getElementById('communityDoughnut').getContext('2d');
+            
+            communityChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Northeast', 'South', 'Midwest', 'Southwest', 'West Coast'],
+                    datasets: [{
+                        data: [25, 30, 15, 10, 20],
+                        backgroundColor: [
+                            '#D97706', // Saffron
+                            '#57534E', // Sage
+                            '#9A3412', // Terracotta
+                            '#E7E5E4', // Light Stone
+                            '#78716C'  // Med Stone
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    family: 'Lato',
+                                    size: 12
+                                },
+                                color: '#E7E5E4', // Light text for dark background
+                                padding: 20,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: '#FDFBF7',
+                            titleColor: '#1C1917',
+                            bodyColor: '#57534E',
+                            titleFont: { family: 'Playfair Display' },
+                            bodyFont: { family: 'Lato' },
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
 </body>
 </html>
