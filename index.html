@@ -303,10 +303,17 @@
                             </li>
                         </ul>
 
-                        <div class="flex max-w-md">
-                            <input type="email" placeholder="Enter your email" class="bg-stone-800 text-white border border-stone-700 px-4 py-3 w-full focus:outline-none focus:border-saffron rounded-l-sm">
-                            <button onclick="alert('Thank you! You have been added to the Founding Citizens waitlist.')" class="bg-saffron text-chef-black px-6 py-3 font-bold uppercase tracking-widest text-sm hover:bg-white transition-colors rounded-r-sm whitespace-nowrap">
-                                Join Waitlist
+                        <div class="flex flex-col max-w-md">
+    <div class="flex">
+        <input type="text" id="honeypot" style="display:none" tabindex="-1" autocomplete="off">
+        
+        <input type="email" id="waitlist-email" placeholder="Enter your email" class="bg-stone-800 text-white border border-stone-700 px-4 py-3 w-full focus:outline-none focus:border-saffron rounded-l-sm">
+        <button onclick="submitWaitlist()" class="bg-saffron text-chef-black px-6 py-3 font-bold uppercase tracking-widest text-sm hover:bg-white transition-colors rounded-r-sm whitespace-nowrap">
+            Join Waitlist
+        </button>
+    </div>
+    <p id="form-msg" class="text-xs mt-2 transition-opacity opacity-0"></p>
+</div>
                             </button>
                         </div>
                     </div>
@@ -468,7 +475,47 @@
                 listContainer.appendChild(btn);
             });
         }
+async function submitWaitlist() {
+    const emailInput = document.getElementById('waitlist-email');
+    const honey = document.getElementById('honeypot');
+    const msg = document.getElementById('form-msg');
+    const email = emailInput.value;
+    
+    // 1. Honeypot check: If this hidden field is filled, it's a bot.
+    if (honey.value.length > 0) {
+        console.log("Bot detected.");
+        return; // Exit silently
+    }
 
+    // 2. Basic Validation
+    if (!email || !email.includes('@')) {
+        msg.innerText = "Please enter a valid culinary contact.";
+        msg.classList.replace('opacity-0', 'opacity-100');
+        return;
+    }
+
+    const scriptURL = 'YOUR_COPIED_WEB_APP_URL_HERE';
+
+    try {
+        msg.innerText = "Reserving your seat...";
+        msg.classList.replace('opacity-0', 'opacity-100');
+
+        await fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ 'email': email })
+        });
+        
+        // Success UI
+        alert('Welcome to the Founding Citizens! We have added ' + email + ' to the list.');
+        emailInput.value = '';
+        msg.innerText = "Success! Check your inbox soon.";
+    } catch (error) {
+        console.error('Error!', error.message);
+        alert('The kitchen is a bit smoky! Please try again in a moment.');
+    }
+}
         function renderRecipe(index) {
             currentRecipeIndex = index;
             const recipe = recipes[index];
@@ -628,4 +675,5 @@
     </script>
 </body>
 </html>
+
 
