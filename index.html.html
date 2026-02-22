@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benjamin's Gaming Blog</title>
+    <style>
+        /* --- General Page Styles --- */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        /* --- Navigation Bar (Based on Figure 11.14 logic) --- */
+        nav {
+            background-color: #333; /* Dark background */
+            padding: 1rem;
+        }
+
+        nav ul {
+            list-style-type: none; /* Removes bullet points */
+            margin: 0;
+            padding: 0;
+            text-align: center; /* Centers the links */
+        }
+
+        nav li {
+            display: inline; /* Makes the list horizontal */
+            margin: 0 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none; /* Removes underline */
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        nav a:hover {
+            color: #ff9900; /* Changes color when you hover */
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-bottom: 2px solid #ddd;
+        }
+
+        /* --- The 3-Column Layout (Using Flexbox) --- */
+        .container {
+            display: flex; /* This turns on Flexbox */
+            justify-content: space-between; /* Spacing between columns */
+            max-width: 1200px;
+            margin: 20px auto; /* Centers the container */
+            padding: 0 20px;
+            gap: 20px; /* Space between the columns */
+        }
+
+        .column {
+            background-color: white;
+            padding: 20px;
+            flex: 1; /* Makes all 3 columns equal width */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* --- Images --- */
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        /* --- Responsive Design (Optional but good for points) --- */
+        /* If screen is small, stack the columns */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Reviews</a></li>
+            <li><a href="#">Walkthroughs</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <h1>Benjamin's Gaming Corner</h1>
+        <p>Exploring the worlds of Elden Ring, Zelda, and more.</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="column">
+            <h2>Latest Review</h2>
+            <img src="game1.jpg" alt="Elden Ring Screenshot">
+            <p>Elden Ring continues to dominate the charts. The open-world design sets a new standard for the genre.</p>
+        </div>
+
+        <div class="column">
+            <h2>Cooking Tips</h2>
+            <p><strong>Gamer Fuel:</strong> Quick recipes for long gaming sessions.</p>
+            <p>When I'm not playing, I'm cooking. Check out my recipe for the ultimate spicy ramen that keeps you alert during boss fights.</p>
+        </div>
+
+        <div class="column">
+            <h2>Upcoming Games</h2>
+            <p>We are all waiting for the DLC. Here is what we know so far about the release dates and new map areas coming soon.</p>
+            <p><em>Stay tuned for updates!</em></p>
+        </div>
+
+    </div>
+
+</body>
+</html>
